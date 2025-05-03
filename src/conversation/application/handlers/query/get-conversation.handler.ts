@@ -1,9 +1,14 @@
 import {IQueryHandler, QueryHandler} from "@nestjs/cqrs";
-import {SaveConversationQuery} from "@conversation/application/query/save-conversation.query";
+import {GetConversationQuery} from "@conversation/application/query/get-conversation.query";
+import {Inject} from "@nestjs/common";
+import {IConversationRepository} from "@conversation/domain/repositories/conversation.interface";
 
-@QueryHandler(SaveConversationQuery)
-export class SaveConversationHandler implements IQueryHandler<SaveConversationQuery> {
-    async execute(query: SaveConversationQuery) {
+@QueryHandler(GetConversationQuery)
+export class GetConversationQueryHandler implements IQueryHandler<GetConversationQuery> {
+    constructor(@Inject("IConversationRepository") private readonly repository: IConversationRepository) {
+    }
+
+    async execute(query: GetConversationQuery) {
         console.log("Handled query");
     }
 }

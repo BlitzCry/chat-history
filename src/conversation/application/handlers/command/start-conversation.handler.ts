@@ -1,16 +1,19 @@
 import {StartConversationCommand} from "@conversation/application/commands/start-conversation.command";
 import {CommandHandler, ICommandHandler} from "@nestjs/cqrs";
 import {ConversationAggregate} from "@conversation/domain/aggregates/conversation.aggregate";
-import {ConversationDTO} from "@conversation/application/dtos/conversation.dto";
+import {Inject} from "@nestjs/common";
+import {IConversationRepository} from "@conversation/domain/repositories/conversation.interface";
 
 @CommandHandler(StartConversationCommand)
 export class StartConversationHandler implements ICommandHandler<StartConversationCommand> {
-    async execute(command: StartConversationCommand) {
+    constructor(@Inject("IConversationRepository") private readonly repository: IConversationRepository) {
+    }
+
+    async execute(command: StartConversationCommand): Promise<string> {
         const aggregate = ConversationAggregate.start(command.userId, command.message);
 
-        console.log("Handled");
-        // await this.store.save(aggregate);
+        await this.repository.save(aggregate);
 
-        return ConversationDTO.fromAggregate(aggregate)
+        return aggregate.id.getValue
     }
 }
