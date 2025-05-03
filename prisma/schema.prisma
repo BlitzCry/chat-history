@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(uuid())
+  external_id   String         @unique
+  conversations Conversation[]
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @updatedAt
+  deleted_at    DateTime?
+}
+
+model Conversation {
+  id         String    @id @default(uuid())
+  user       User      @relation(fields: [user_id], references: [id])
+  user_id    String
+  messages   Message[]
+  model      AIModel   @relation(fields: [model_id], references: [id])
+  model_id   String
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  @@index([user_id])
+}
+
+model Message {
+  id              String        @id @default(uuid())
+  conversation    Conversation  @relation(fields: [conversation_id], references: [id])
+  conversation_id String
+  sender          MessageSender // 'USER' or 'AI'
+  content         String? // Text content (optional for image-only messages)
+  image_url       String? // If multimodal support is needed
+  metadata        Json? // e.g., tokens, latency, etc.
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+  deleted_at      DateTime?
+
+  @@index([conversation_id])
+}
+
+model AIModel {
+  id         String    @id @default(uuid())
+  name       String    @unique // e.g., 'gpt-4', 'gemini-pro'
+  provider   String // e.g., 'OpenAI', 'Google'
+  metadata   Json?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  conversations Conversation[]
+}
+
+enum MessageSender {
+  USER
+  AI
+}
