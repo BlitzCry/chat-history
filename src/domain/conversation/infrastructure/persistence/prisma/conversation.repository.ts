@@ -20,6 +20,16 @@ export class PrismaConversationRepository implements IConversationRepository {
         })
     }
 
+    async update(aggregate: ConversationAggregate): Promise<void> {
+        await this.prisma.conversation.update({
+            where: {id: aggregate.id.getValue},
+            data: {
+                model_id: aggregate.modelId,
+                updated_at: new Date(),
+            }
+        })
+    }
+
     async getById(id: string): Promise<unknown> {
         return this.prisma.conversation.findFirst({
             where: {id: id},

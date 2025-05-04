@@ -11,9 +11,7 @@ export class ConversationAggregate {
     ) {
     }
 
-    static start(userId: string, modelId: string): ConversationAggregate {
-        const id = new ConversationId();
-
+    static start(userId: string, modelId: string, id: ConversationId = new ConversationId()): ConversationAggregate {
         return new ConversationAggregate(id, userId, modelId, []);
     }
 

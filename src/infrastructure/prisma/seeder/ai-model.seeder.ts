@@ -11,7 +11,7 @@ export class AiModelSeeder implements ISeeder {
     async seed() {
         console.info("[Seed][AI Model] Start seeding AI models");
 
-        const AIModel = AiModelFactory.create("GPT", "OpenAI", "{}");
+        const AIModel = AiModelFactory.create("GPT 2", "OpenAI 2", "{}");
 
         try {
             await this.prisma.aIModel.create({data: AIModel.toQuery()})
