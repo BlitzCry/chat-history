@@ -19,13 +19,19 @@
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@conversation/*": [
-        "src/conversation/*"
+        "src/domain/conversation/*"
       ],
       "@commons/*": [
         "src/commons/*"
       ],
       "@src/*": [
         "src/*"
+      ],
+      "@seeder/*": [
+        "src/infrastructure/*"
+      ],
+      "@user/*": [
+        "src/domain/user/*"
       ]
     }
   }
